@@ -1,8 +1,20 @@
+const exphbs = require(`express-handlebars`);
 const express = require(`express`);
-const server = express();
+const app = express();
 
-server.get(`/`, (req, res) => {
-  res.send(`hello from backend to frontend!`);
+app.set("view engine", "handlebars");
+app.engine("handlebars", exphbs({ defaultLayout: false }));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.get(`/`, (req, res) => {
+  res.render("index");
 });
 
-server.listen(3000);
+app.post(`/weather`, (req, res) => {
+  const cityName = req.body.cityName;
+  res.render("index", { cityName: `Your chosen city is: ${cityName}` });
+});
+
+app.listen(3000);
