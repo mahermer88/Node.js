@@ -20,10 +20,10 @@ app.post("/blogs", (req, res) => {
   const content = req.body.content;
   // What if the request does not have a title and/or content?
   if (!title || !content) {
-    return res.status(400).json({ msg: "Please include a title and content" });
+    return res.status(400).send({ msg: "Please include a title and content" });
   }
   fs.writeFileSync(title, content);
-  res.end("ok");
+  res.status(201).end("ok");
 
   blogs.push(title);
 });
@@ -39,10 +39,10 @@ app.put("/posts/:title", (req, res) => {
         .json({ msg: "Please include a title and content" });
     }
     fs.writeFileSync(title, content);
-    res.end("ok");
+    res.status(200).end("ok");
   } else {
     // Send response with error message
-    res.status(400).json({ msg: `This post does not exist!` });
+    res.status(400).send({ msg: `This post does not exist!` });
   }
 });
 
@@ -51,9 +51,9 @@ app.delete("/blogs/:title", (req, res) => {
   const title = req.params.title;
   if (fs.existsSync(title)) {
     fs.unlinkSync(title);
-    res.end("ok");
+    res.status(201).end("ok");
   } else {
-    res.status(400).json({ msg: `This post does not exist!` });
+    res.status(400).send({ msg: `This post does not exist!` });
   }
 });
 // Read blog
@@ -63,7 +63,7 @@ app.get("/blogs/:title", (req, res) => {
     const post = fs.readFileSync(title);
     res.end(post);
   } else {
-    res.status(400).json({ msg: `This post does not exist!` });
+    res.status(400).send({ msg: `This post does not exist!` });
   }
 });
 
