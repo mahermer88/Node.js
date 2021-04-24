@@ -22,13 +22,17 @@ async function printChuckNorrisJoke() {
     const randomJoke = response.value.joke;
     return randomJoke;
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 }
 
 app.get(`/`, async (req, res) => {
-  const randomJoke = await printChuckNorrisJoke();
-  res.send(`<h1>${randomJoke}</h1>`);
+  try {
+    const randomJoke = await printChuckNorrisJoke();
+    res.status(200).send(`<h1>${randomJoke}</h1>`);
+  } catch (err) {
+    res.status(404).send(`<h1>${err}</h1>`);
+  }
 });
 
 app.listen(3000);

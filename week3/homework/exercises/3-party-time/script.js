@@ -31,7 +31,7 @@ async function makeReservation(details) {
     const response = await data.json();
     return response.message;
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 }
 
@@ -42,14 +42,21 @@ app.get(`/`, (req, res) => {
 
 // Create new reservation
 app.post("/reservations", async (req, res) => {
-  // What if the request does not have a title and/or content?
-  if (!req.body) {
-    return res.status(400).send({
-      msg: "Please include a valid name and number of people you plan to bring",
+  try {
+    // What if the request does not have a title and/or content?
+    if (!req.body || !req.body.name || !req.body.numberOfPeople) {
+      return res.status(400).render("index", {
+        message:
+          "Please include a valid name and number of people you plan to bring",
+      });
+    }
+    const message = await makeReservation(req.body);
+    res.status(200).render("index", { message });
+  } catch (err) {
+    return res.status(404).render("index", {
+      message: err,
     });
   }
-  const message = await makeReservation(req.body);
-  res.render("index", { message });
 });
 
 app.listen(3000);

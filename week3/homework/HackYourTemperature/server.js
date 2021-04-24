@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get(`/`, (req, res) => {
-  res.render("index");
+  res.status(200).render("index");
 });
 
 app.post(`/weather`, (req, res) => {
@@ -29,10 +29,10 @@ app.post(`/weather`, (req, res) => {
         `Humidity: ${data.main.humidity}`,
         `Wind-speed: ${data.wind.speed}`,
       ];
-      res.render("index", { infoList });
+      res.status(200).render("index", { infoList });
     })
     .catch((error) => {
-      res.render("index", {
+      res.status(404).render("index", {
         error: "City is not found!, Please include valid city name!",
       });
     });

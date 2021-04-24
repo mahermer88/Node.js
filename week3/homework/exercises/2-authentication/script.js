@@ -27,13 +27,17 @@ async function printBooks() {
     const response = await data.json();
     return response;
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 }
 
 app.get(`/`, async (req, res) => {
-  const books = await printBooks();
-  res.render(`index`, { books });
+  try {
+    const books = await printBooks();
+    res.status(200).render(`index`, { books });
+  } catch (err) {
+    res.status(404).render(`index`, { err });
+  }
 });
 
 app.listen(3000);
