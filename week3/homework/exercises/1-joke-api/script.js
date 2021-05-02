@@ -22,7 +22,7 @@ async function printChuckNorrisJoke() {
     const randomJoke = response.value.joke;
     return randomJoke;
   } catch (err) {
-    throw err;
+    console.log(err);
   }
 }
 

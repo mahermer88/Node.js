@@ -1,5 +1,6 @@
 const axios = require(`axios`).default;
 const exphbs = require(`express-handlebars`);
+const API_KEY = require("./sources/keys.json");
 const express = require(`express`);
 const app = express();
 
@@ -15,7 +16,11 @@ app.get(`/`, (req, res) => {
 
 app.post(`/weather`, (req, res) => {
   const cityName = req.body.cityName;
-  const API_KEY = require("./sources/keys.json");
+  if (!cityName) {
+    res.status(404).render("index", {
+      error: "City is not found!, Please include valid city name!",
+    });
+  }
 
   axios(
     `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${API_KEY}`
